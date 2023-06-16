@@ -54,7 +54,7 @@ public class UserResource {
     }
     @GetMapping("/name/{name}")
     public ResponseEntity<List<User>> buscarPorNome(@PathVariable String nome) {
-        List<User> lista = service.findByname(nome);
+        List<User> lista = service.findByName(nome);
         return lista.size()> 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
     }
 

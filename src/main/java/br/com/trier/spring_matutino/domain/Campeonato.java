@@ -14,6 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = "id")
 @Entity
 public class Campeonato {
@@ -27,5 +28,5 @@ public class Campeonato {
 	private String descricao;
 	@Column
 	private String ano;
-	
+
 }
