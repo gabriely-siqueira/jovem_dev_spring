@@ -5,10 +5,12 @@ import java.util.List;
 import br.com.trier.spring_matutino.domain.Equipe;
 
 public interface EquipeService {
-
-	Equipe insert(Equipe equipe);
-	Equipe update(Equipe equipe);
-	Equipe findById(Integer id);
-	void delete(Integer id);
+	
+	Equipe salvar(Equipe equipe);
 	List<Equipe> listAll();
+	Equipe findById(Integer id);
+	Equipe update(Equipe equipe);
+	void delete(Integer id);
+	List<Equipe> findByName(String nome);
+	
 }

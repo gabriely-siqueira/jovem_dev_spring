@@ -16,46 +16,49 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.trier.spring_matutino.domain.User;
 import br.com.trier.spring_matutino.services.UserService;
 
+
 @RestController
-@RequestMapping(value = "/usuario")
+@RequestMapping(value = "/usuarios")
 public class UserResource {
-    @Autowired
-    private UserService service;
 
-    @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User user) {
-        User newUser = service.salvar(user);
-        return newUser != null ? ResponseEntity.ok(newUser) : ResponseEntity.badRequest().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> buscaPorCodigo(@PathVariable Integer id) {
-        User user = service.findById(id);
-        return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build();
-    }
-
-    @GetMapping
-    public ResponseEntity<List<User>> listarTudo() {
-        List<User> lista = service.listAll();
-        return lista != null && !lista.isEmpty() ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User user) {
-        user.setId(id);
-        User updatedUser = service.update(user);
-        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        service.delete(id);
-        return ResponseEntity.ok().build();
-    }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<List<User>> buscarPorNome(@PathVariable String nome) {
-        List<User> lista = service.findByName(nome);
-        return lista.size()> 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();
-    }
+	@Autowired
+	private UserService service;
+	
+	@PostMapping
+	public ResponseEntity<User> insert(@RequestBody User user){
+		User newUser = service.salvar(user);
+		return newUser != null ? ResponseEntity.ok(newUser) : ResponseEntity.badRequest().build();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<User> buscaPorCodigo(@PathVariable Integer id) {
+		User user = service.findById(id);
+		return user != null ? ResponseEntity.ok(user) : ResponseEntity.noContent().build(); 
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<User>> listaTudo(){
+		List<User> lista = service.listAll();
+		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build(); 
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<User> update(@PathVariable Integer id, @RequestBody User user){
+		user.setId(id);
+		user = service.update(user);
+		return user != null ? ResponseEntity.ok(user) : ResponseEntity.badRequest().build();
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<User> delete(@PathVariable Integer id){
+		service.delete(id);
+		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/name/{name}")
+	public ResponseEntity<List<User>> buscaPorNome(@PathVariable String name) {
+		return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name)); 
+	}
+	
 
 }

@@ -10,23 +10,24 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(of = "id")
-@Entity
+@Entity(name = "campeonato")
 public class Campeonato {
-
+	
 	@Id
-	@Setter
-	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_campeonato")
+	@Setter
 	private Integer id;
-	@Column
+	
+	@Column(name = "descricao_campeonato")
 	private String descricao;
-	@Column
-	private String ano;
+	
+	@Column(name = "ano_campeonato")
+	private Integer year;
 
 }

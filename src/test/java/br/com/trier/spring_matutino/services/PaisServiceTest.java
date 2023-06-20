@@ -27,7 +27,7 @@ public class PaisServiceTest extends BaseTest {
 		var pais = paisService.findById(1);
 		assertThat(pais).isNotNull();
 		assertEquals(1, pais.getId());
-		assertEquals("Brasil", pais.getNome());
+		assertEquals("Brasil", pais.getName());
 
 	}
 
@@ -44,14 +44,14 @@ public class PaisServiceTest extends BaseTest {
 	@Sql(("classpath:/resources/sql/pais.sql"))
 	void updatepaisTest() {
 		var pais = paisService.findById(1);
-		pais.setNome("Novo País");
+		pais.setName("Novo País");
 
 		Pais updatedPais = paisService.update(pais);
 
 		assertThat(updatedPais).isNotNull();
 		assertEquals(1, updatedPais.getId());
 
-		assertEquals("Novo País", updatedPais.getNome());
+		assertEquals("Novo País", updatedPais.getName());
 
 	}
 

@@ -15,15 +15,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-
 @Entity(name = "pais")
 public class Pais {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pais")
+	@Setter
 	private Integer id;
-
-	@Column(name = "nome_pais")
-	private String nome;
+	
+	@Column(name = "nome_pais", unique=true)
+	private String name;
 }

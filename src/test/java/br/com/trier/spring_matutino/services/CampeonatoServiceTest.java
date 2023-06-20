@@ -29,7 +29,7 @@ public class CampeonatoServiceTest extends BaseTest {
 		assertThat(campeonato).isNotNull();
 		assertEquals(1, campeonato.getId());
 		assertEquals("campeonato1", campeonato.getDescricao());
-		assertEquals("2023", campeonato.getAno());
+		assertEquals(2023, campeonato.getYear());
 
 	}
 
@@ -47,7 +47,7 @@ public class CampeonatoServiceTest extends BaseTest {
 	void updatecampeonatoTest() {
 		var campeonato = campeonatoService.findById(1);
 		campeonato.setDescricao("Novo campeonato");
-		campeonato.setAno("2022");
+		campeonato.setYear(2022);
 		
 
 		Campeonato updatedCampeonato = campeonatoService.update(campeonato);
@@ -56,7 +56,7 @@ public class CampeonatoServiceTest extends BaseTest {
 		assertEquals(1, updatedCampeonato.getId());
 
 		assertEquals("Novo campeonato", updatedCampeonato.getDescricao());
-		assertEquals("2022", updatedCampeonato.getAno());
+		assertEquals(2022, updatedCampeonato.getYear());
 
 	}
 

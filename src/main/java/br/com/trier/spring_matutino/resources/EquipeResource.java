@@ -17,7 +17,7 @@ import br.com.trier.spring_matutino.domain.Equipe;
 import br.com.trier.spring_matutino.services.EquipeService;
 
 @RestController
-@RequestMapping("/equipe")
+@RequestMapping(value = "/equipes")
 public class EquipeResource {
 	
 	@Autowired
@@ -25,34 +25,39 @@ public class EquipeResource {
 	
 	@PostMapping
 	public ResponseEntity<Equipe> insert(@RequestBody Equipe equipe){
-		Equipe newEquipe = service.insert(equipe);
-		return newEquipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.badRequest().build();
+		Equipe newEquipe = service.salvar(equipe);
+		return newEquipe != null ? ResponseEntity.ok(newEquipe) : ResponseEntity.badRequest().build();
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<Equipe> buscaPorCodigo(@PathVariable Integer id) {
+		Equipe equipe = service.findById(id);
+		return equipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.noContent().build(); 
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Equipe>> listaTudo(){
+		List<Equipe> lista = service.listAll();
+		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build(); 
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Equipe> update(@RequestBody Equipe equipe, @PathVariable Integer id){
+	public ResponseEntity<Equipe> update(@PathVariable Integer id, @RequestBody Equipe equipe){
 		equipe.setId(id);
-		equipe = service.insert(equipe);
+		equipe = service.update(equipe);
 		return equipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.badRequest().build();
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@PathVariable Integer id){
+	public ResponseEntity<Equipe> delete(@PathVariable Integer id){
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Equipe> findById(@PathVariable Integer id){
-		Equipe equipe = service.findById(id);
-		return equipe != null ? ResponseEntity.ok(equipe) : ResponseEntity.badRequest().build();
+	@GetMapping("/name/{nome}")
+	public ResponseEntity<List<Equipe>> findByName(@PathVariable String nome) {
+		List<Equipe> lista = service.findByName(nome);
+		return lista.size() > 0 ? ResponseEntity.ok(lista) : ResponseEntity.noContent().build();		
 	}
-	
-	@GetMapping()
-	public ResponseEntity<List<Equipe>> listAll(){
-		List<Equipe> equipes = service.listAll();
-		return equipes.size()>0 ? ResponseEntity.ok(equipes) : ResponseEntity.noContent().build();
-	}
-	
 
 }
