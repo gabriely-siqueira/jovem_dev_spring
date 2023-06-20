@@ -1,4 +1,4 @@
-insert into campeonato (id,descricao,ano)
-values (1,'campeonato1','2023');
-insert into campeonato (id,descricao,ano)
-values (2,'campeonato2','2023');
+insert into campeonato (id_campeonato,descricao_campeonato,ano_campeonato)
+values (1,'campeonato1','2015');
+insert into campeonato (id_campeonato,descricao_campeonato,ano_campeonato)
+values (2,'campeonato2','2010');
