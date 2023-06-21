@@ -2,16 +2,20 @@ package br.com.trier.spring_matutino.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Pais;
+
+import br.com.trier.spring_matutino.services.exceptions.ObjetoNaoEncontrado;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -19,6 +23,18 @@ public class PaisServiceTest extends BaseTest {
 
 	@Autowired
 	PaisService paisService;
+	 @Test
+	    @DisplayName("Teste inserção de país")
+	    void insertPaisTest() {
+	        Pais novoPais = new Pais();
+	        novoPais.setName("Novo País");
+
+	        Pais insertedPais = paisService.salvar(novoPais);
+
+	        assertThat(insertedPais).isNotNull();
+	        assertThat(insertedPais.getId()).isPositive();
+	        assertEquals("Novo País", insertedPais.getName());
+	    }
 
 	@Test
 	@DisplayName("Teste busca pais por ID")
@@ -32,12 +48,13 @@ public class PaisServiceTest extends BaseTest {
 	}
 
 	@Test
-	@DisplayName("Teste busca por ID país inexistente")
+	@DisplayName("Teste busca por ID pais inexistente")
 	@Sql(("classpath:/resources/sql/pais.sql"))
-	void findNonExistent() {
-		var pais = paisService.findById(10);
-		assertThat(pais).isNull();
+	void findByIdNonExistentTest() {
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> paisService.findById(10));
+		assertEquals("País 10 não encontrada!", exception.getMessage());
 	}
+
 
 	@Test
 	@DisplayName("Teste atualização de país")
@@ -54,16 +71,14 @@ public class PaisServiceTest extends BaseTest {
 		assertEquals("Novo País", updatedPais.getName());
 
 	}
-
 	@Test
-	@DisplayName("Teste exclusão de país")
+	@DisplayName("Teste delete pais")
 	@Sql(("classpath:/resources/sql/pais.sql"))
-	void deletePaisTest() {
-		var pais = paisService.findById(1);
-		paisService.delete(pais.getId());
-
-		var deletedPais = paisService.findById(1);
-		assertThat(deletedPais).isNull();
+	void deleteTest() {
+		paisService.delete(2);
+		List<Pais> lista = paisService.listAll();
+		assertEquals(1, lista.size());
+		assertEquals(1, lista.get(0).getId());		
 	}
 
 

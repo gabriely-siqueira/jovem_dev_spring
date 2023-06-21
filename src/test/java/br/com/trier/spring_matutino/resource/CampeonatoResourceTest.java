@@ -25,7 +25,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import br.com.trier.spring_matutino.SpringMatutinoApplication;
 import br.com.trier.spring_matutino.domain.Campeonato;
-
+import br.com.trier.spring_matutino.domain.dto.UserDTO;
 
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
@@ -36,14 +36,15 @@ public class CampeonatoResourceTest {
 	@Autowired
 	protected TestRestTemplate rest;
 
-
-	private ResponseEntity<Campeonato> getCampeonato(String url){
+	private ResponseEntity<Campeonato> getCampeonato(String url) {
 		return rest.getForEntity(url, Campeonato.class);
 	}
-	
-	private ResponseEntity<List<Campeonato>> getCampeonatos(String url){
-		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Campeonato>>() {});
+
+	private ResponseEntity<List<Campeonato>> getCampeonatos(String url) {
+		return rest.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<List<Campeonato>>() {
+		});
 	}
+
 	@Test
 	@DisplayName("Buscar por id")
 	void FindById() {
@@ -52,14 +53,14 @@ public class CampeonatoResourceTest {
 		Campeonato camp = response.getBody();
 		assertEquals("campeonato1", camp.getDescricao());
 	}
-	
+
 	@Test
 	@DisplayName("Buscar por id inexistente")
 	void FindByIdNotFound() {
 		ResponseEntity<Campeonato> response = getCampeonato("/campeonatos/10");
 		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
 	}
-	
+
 	@Test
 	@DisplayName("Listar todos campeonatos")
 	void listAll() {
@@ -68,7 +69,7 @@ public class CampeonatoResourceTest {
 		List<Campeonato> lista = response.getBody();
 		assertEquals(2, lista.size());
 	}
-	
+
 	@Test
 	@DisplayName("atualizar campeonato")
 	void update() {
@@ -76,21 +77,17 @@ public class CampeonatoResourceTest {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Campeonato> requestEntity = new HttpEntity<>(camp, headers);
-		ResponseEntity<Campeonato> responseEntity = rest.exchange("/campeonatos/2",
-				HttpMethod.PUT,
-				requestEntity,
+		ResponseEntity<Campeonato> responseEntity = rest.exchange("/campeonatos/2", HttpMethod.PUT, requestEntity,
 				Campeonato.class);
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
 		camp = responseEntity.getBody();
 		assertEquals("campeonato2", camp.getDescricao());
 	}
-	
+
 	@Test
 	@DisplayName("deleta campeonato")
 	void delete() {
-		ResponseEntity<Campeonato> responseEntity = rest.exchange("/campeonatos/1",
-				HttpMethod.DELETE,
-				null,
+		ResponseEntity<Campeonato> responseEntity = rest.exchange("/campeonatos/1", HttpMethod.DELETE, null,
 				Campeonato.class);
 		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
 		ResponseEntity<Campeonato> campResponse = getCampeonato("/campeonatos/1");
@@ -102,7 +99,8 @@ public class CampeonatoResourceTest {
 	void findByAnoTest() {
 		ResponseEntity<List<Campeonato>> response = getCampeonatos("/campeonato/year/2015");
 		assertEquals(response.getStatusCode(), HttpStatus.OK);
+		List<Campeonato> campeonato = response.getBody();
+		assertEquals(2015, campeonato.get(0).getYear());
 	}
 
-	
 }

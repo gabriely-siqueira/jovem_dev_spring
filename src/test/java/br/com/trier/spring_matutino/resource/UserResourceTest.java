@@ -116,10 +116,10 @@ public class UserResourceTest {
 	 @Test
 	    @DisplayName("Buscar usuário pelo nome")
 	    public void testFindByName() {
-	        ResponseEntity<UserDTO> response = getUser("/usuarios/name/Usuario1");
+	        ResponseEntity<List<UserDTO>> response = getUsers("/usuarios/name/Usuario1");
 	        assertEquals(response.getStatusCode(), HttpStatus.OK);
-	        UserDTO user = response.getBody();
-	        assertEquals("Usuario1", user.getName());
+	        List<UserDTO> user = response.getBody();
+	        assertEquals("Usuario1", user.get(0).getName());
 	    }
 }
 

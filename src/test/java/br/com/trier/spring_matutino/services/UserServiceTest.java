@@ -103,7 +103,7 @@ public class UserServiceTest extends BaseTest {
 		assertEquals(2, lista.size());
 	}
 	
-	
+	 
 	@Test
 	@DisplayName("Teste listar usuário por inicial nome")
 	@Sql(("classpath:/resources/sql/usuario.sql"))

@@ -3,6 +3,7 @@ package br.com.trier.spring_matutino.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Equipe;
+import br.com.trier.spring_matutino.domain.Pais;
+import br.com.trier.spring_matutino.services.exceptions.ObjetoNaoEncontrado;
 import jakarta.transaction.Transactional;
 
 @Transactional
@@ -36,9 +39,9 @@ public class EquipeServiceTest extends BaseTest {
 	@Test
 	@DisplayName("Teste busca por ID equipe inexistente")
 	@Sql(("classpath:/resources/sql/equipe.sql"))
-	void findNonExistent() {
-		var equipe = equipeService.findById(10);
-		assertThat(equipe).isNull();
+	void findByIdNonExistentTest() {
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> equipeService.findById(10));
+		assertEquals("Equipe 10 não encontrada!", exception.getMessage());
 	}
 
 	@Test
@@ -47,9 +50,6 @@ public class EquipeServiceTest extends BaseTest {
 	void updateequipeTest() {
 		var equipe = equipeService.findById(1);
 		equipe.setName("Novo equipe");
-
-		
-
 		Equipe updatedEquipe = equipeService.update(equipe);
 
 		assertThat(updatedEquipe).isNotNull();
@@ -61,16 +61,14 @@ public class EquipeServiceTest extends BaseTest {
 	}
 
 	@Test
-	@DisplayName("Teste exclusão de equipe")
+	@DisplayName("Teste delete equipe")
 	@Sql(("classpath:/resources/sql/equipe.sql"))
-	void deleteEquipeTest() {
-		var equipe = equipeService.findById(1);
-		equipeService.delete(equipe.getId());
-
-		var deletedEquipe = equipeService.findById(1);
-		assertThat(deletedEquipe).isNull();
+	void deleteTest() {
+		equipeService.delete(2);
+		List<Equipe> lista = equipeService.listAll();
+		assertEquals(1, lista.size());
+		assertEquals(1, lista.get(0).getId());		
 	}
-
 	@Test
 	@DisplayName("Teste listagem de equipe")
 	@Sql(("classpath:/resources/sql/equipe.sql"))
