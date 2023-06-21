@@ -102,6 +102,25 @@ public class UserResourceTest {
 		UserDTO user = responseEntity.getBody();
 		assertEquals("atualiza", user.getName());
 	}
-
-
+	@Test
+	@DisplayName("deleta usuários")
+	public void delete() {
+		ResponseEntity<UserDTO> responseEntity = rest.exchange("/usuarios/1",
+				HttpMethod.DELETE,
+				null,
+				UserDTO.class);
+		assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+		ResponseEntity<UserDTO> userResponse = getUser("/usuarios/1");
+		assertEquals(HttpStatus.NOT_FOUND, userResponse.getStatusCode());
+	}
+	 @Test
+	    @DisplayName("Buscar usuário pelo nome")
+	    public void testFindByName() {
+	        ResponseEntity<UserDTO> response = getUser("/usuarios/name/Usuario1");
+	        assertEquals(response.getStatusCode(), HttpStatus.OK);
+	        UserDTO user = response.getBody();
+	        assertEquals("Usuario1", user.getName());
+	    }
 }
+
+
