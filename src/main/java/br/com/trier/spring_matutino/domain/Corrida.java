@@ -1,7 +1,10 @@
 package br.com.trier.spring_matutino.domain;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
+import br.com.trier.spring_matutino.domain.dto.CorridaDTO;
+import br.com.trier.spring_matutino.utils.DateUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,8 +36,22 @@ public class Corrida {
 
 	@ManyToOne
 	private Pista pista;
-	
+
 	@ManyToOne
 	private Campeonato campeonato;
 
-}
+	public Corrida(CorridaDTO dto) {
+
+		this(dto.getId(), DateUtils.strToZonedDateTime(dto.getData()), new Pista(dto.getIdPista(), null, null),
+				new Campeonato(dto.getIdCampeonato(), dto.getDescricaoCampeonato(), null));
+	}
+
+	public CorridaDTO toDto() {
+	    return new CorridaDTO(
+	        id,
+	        DateUtils.zonedDateTimeToStr(data),
+	        pista.getId(),
+	        campeonato.getId(),
+	        campeonato.getDescricao()
+	    );
+	}}

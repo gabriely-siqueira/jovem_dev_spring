@@ -23,7 +23,7 @@ public class CorridaServiceImpl implements CorridaService {
 
 		@Override
 		public Corrida salvar(Corrida corrida) {
-			validaCorrida(corrida);
+			validaCorrida(corrida); 
 			return repository.save(corrida);
 		}
 
@@ -32,13 +32,15 @@ public class CorridaServiceImpl implements CorridaService {
 				throw new ViolacaoIntegridade("A corrida está nula");
 			} else if(corrida.getData() == null) {
 				throw new ViolacaoIntegridade("A data está nula");
+			}else if(corrida.getData().getYear()!= corrida.getCampeonato().getYear()) {
+				throw new ViolacaoIntegridade("A data da corrida precisa ser no mesmo ano que campeonato");
 			}
 			validaData(corrida.getData());
 		}
 		
 		private void validaData(ZonedDateTime data) {
 			if(data.isBefore(ZonedDateTime.now())) {
-				throw new ViolacaoIntegridade("A data tem que ser posterior a data atual");
+				
 			}
 		}
 		

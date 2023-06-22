@@ -24,6 +24,6 @@ public class Pais {
 	@Setter
 	private Integer id;
 	
-	@Column(name = "nome_pais")
+	@Column(name = "nome_pais", unique=true)
 	private String name;
 }
