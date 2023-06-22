@@ -46,12 +46,12 @@ public class Corrida {
 				new Campeonato(dto.getIdCampeonato(), dto.getDescricaoCampeonato(), null));
 	}
 
+	public Corrida(CorridaDTO dto, Campeonato campeonato, Pista pista) {
+
+	}
+
 	public CorridaDTO toDto() {
-	    return new CorridaDTO(
-	        id,
-	        DateUtils.zonedDateTimeToStr(data),
-	        pista.getId(),
-	        campeonato.getId(),
-	        campeonato.getDescricao()
-	    );
-	}}
+		return new CorridaDTO(id, DateUtils.zonedDateTimeToStr(data), pista.getId(), campeonato.getId(),
+				campeonato.getDescricao());
+	}
+}
