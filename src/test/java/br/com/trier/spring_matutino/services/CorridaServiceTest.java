@@ -15,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Campeonato;
 import br.com.trier.spring_matutino.domain.Corrida;
+import br.com.trier.spring_matutino.domain.Piloto;
 import br.com.trier.spring_matutino.domain.Pista;
 import br.com.trier.spring_matutino.services.exceptions.ObjetoNaoEncontrado;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,12 @@ import jakarta.transaction.Transactional;
 		
 		@Autowired
 		private CorridaService corridaService;
+		@Autowired
+		private PistaService pistaService;
+		@Autowired
+		private PaisService paisService;
+		@Autowired
+		private CampeonatoService campeonatoService;
 
 		@Test
 		@DisplayName("Teste inserção de corrida")
@@ -32,24 +39,27 @@ import jakarta.transaction.Transactional;
 		      "classpath:/resources/sql/pais.sql",
 		      "classpath:/resources/sql/pista.sql"})
 		void insertTest() {
-		    ZonedDateTime data = ZonedDateTime.parse("2023-09-14T12:34:00Z");
-		    var corrida = new Corrida(null, data, new Pista(1, null, null), new Campeonato(1, null, null));
+		    ZonedDateTime data = ZonedDateTime.parse("2015-09-14T12:34:00Z");
+		    var corrida = new Corrida(null, data, pistaService.findById(2), campeonatoService.findById(1));
 		    corridaService.salvar(corrida);
 		    assertEquals(1, corridaService.listAll().size());
 		}
-
+ 
 		@Test
-		@DisplayName("Teste atualização de corrida")//não funciona
+		@DisplayName("Teste atualização de corrida")
 		@Sql({"classpath:/resources/sql/campeonato.sql",
 		      "classpath:/resources/sql/pais.sql",
 		      "classpath:/resources/sql/pista.sql",
 		      "classpath:/resources/sql/corrida.sql"})
 		void updateTest() {
-		    ZonedDateTime data = ZonedDateTime.parse("2009-05-10T18:10:00Z");
-		    var corrida = new Corrida(1, data, new Pista(1, null, null), new Campeonato(1, null, null));
+		    ZonedDateTime data = ZonedDateTime.parse("2015-10-30T18:10:00Z");
+		    var corrida = new Corrida(1, data,  pistaService.findById(2), campeonatoService.findById(1));
 		    corridaService.update(corrida);
 		    assertEquals(data, corridaService.findById(1).getData());
 		}
+		
+		
+
 
 		@Test
 		@DisplayName("Teste exclusão corrida")
@@ -130,7 +140,7 @@ import jakarta.transaction.Transactional;
 		}
 
 		@Test
-		@DisplayName("Teste buscar corridas por pista sem achar")
+		@DisplayName("Teste buscar corridas por pista inválida")
 		@Sql({"classpath:/resources/sql/campeonato.sql",
 		      "classpath:/resources/sql/pais.sql",
 		      "classpath:/resources/sql/pista.sql",

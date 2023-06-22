@@ -14,76 +14,80 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Pais;
+import br.com.trier.spring_matutino.domain.Piloto;
 import br.com.trier.spring_matutino.domain.Pista;
+import br.com.trier.spring_matutino.services.exceptions.ObjetoNaoEncontrado;
+import jakarta.transaction.Transactional;
 
-
-@SpringBootTest
+@Transactional
 public class PistaServiceTest extends BaseTest {
 
-	 @Autowired
-	    PistaService pistaService;
-	    
-	    @Autowired
-	    PaisService paisService;
+	@Autowired
+	PistaService pistaService;
 
-	    @Test
-		@DisplayName("Teste inserção pista")
-		@Sql({"classpath:/resources/sql/pais.sql"})
-		void insertTest() {
-			var pista = new Pista(null, 10, new Pais(2, "Brasil"));
-			pistaService.salvar(pista);
-			assertEquals(1, pistaService.listAll().size());
-			assertEquals("Brasil", pistaService.findById(1).getPais().getName());
-		}
-	
+	@Autowired
+	PaisService paisService;
+
+	@Test
+	@DisplayName("Teste inserção pista")
+	@Sql({ "classpath:/resources/sql/pais.sql" })
+	void insertTest() {
+		var pista = new Pista(null, 5000, paisService.findById(1));
+		pistaService.salvar(pista);
+		assertEquals(1, pistaService.listAll().size());
+		assertEquals("Brasil", pistaService.findById(1).getPais().getName());
+	}
 
 	@Test
 	@DisplayName("Teste de busca de pista pelo id")
 	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
 	void findByIdTest() {
-	    var pista = pistaService.findById(1);
-	    assertEquals(3000, pista.getTamanho());
-	    assertEquals(1, pista.getPais().getId());
+		var pista = pistaService.findById(1);
+		assertEquals(3000, pista.getTamanho());
+		assertEquals(1, pista.getPais().getId());
 	}
 
 	@Test
-	@DisplayName("Teste de atualização de pista")
-	void updatePistaTest() {
-	    Pista pista = pistaService.findById(1);
-	    pista.setTamanho(4000);
-
-	    Pista updatedPista = pistaService.salvar(pista);
-
-	    assertThat(updatedPista).isNotNull();
-	    assertEquals(1, updatedPista.getId());
-	    assertEquals(4000, updatedPista.getTamanho());
+	@DisplayName("Teste buscar pista pelo id inválido")
+	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
+	void findByIdNotFoundTest() {
+		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> pistaService.findById(10));
+		assertEquals("Pista id 10 não existe", exception.getMessage());
+	}
+	@Test
+	@DisplayName("Teste atualização de Pista")
+	@Sql({ "classpath:/resources/sql/pais.sql" })
+	@Sql({ "classpath:/resources/sql/pista.sql" })
+	void updateTest() {
+		var pista = new Pista(1, 4000, paisService.findById(1));
+		pistaService.update(pista);
+		var novaPista = pistaService.findById(1);
+		assertEquals(1, novaPista.getId());
 	}
 
 	@Test
 	@DisplayName("Teste de exclusão de pista")
 	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
 	void deleteTest() {
-	    pistaService.delete(1);
-	    assertEquals(1, pistaService.listAll().size());
+		pistaService.delete(1);
+		assertEquals(1, pistaService.listAll().size());
 	}
 
 	@Test
 	@DisplayName("Teste de listagem de pistas")
+	@Sql({ "classpath:/resources/sql/pais.sql" })
+	@Sql({ "classpath:/resources/sql/pista.sql" })
 	void listPistasTest() {
-	    List<Pista> pistas = pistaService.listAll();
-
-	    assertThat(pistas).isNotNull();
-	    assertThat(pistas).hasSizeGreaterThan(0);
+		assertEquals(2, pistaService.listAll().size());
 	}
 
 	@Test
-    @DisplayName("Teste de busca de pista inexistente")
-    @Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
-    void findByIdNonExistentTest() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            pistaService.findById(9999);
-        });
-    }
-	
+	@DisplayName("Teste de busca de pista inexistente")
+	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
+	void findByIdNonExistentTest() {
+		assertThrows(ObjetoNaoEncontrado.class, () -> {
+			pistaService.findById(9999);
+		});
+	}
 
 }

@@ -14,7 +14,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Pais;
-
+import br.com.trier.spring_matutino.domain.Piloto;
 import br.com.trier.spring_matutino.services.exceptions.ObjetoNaoEncontrado;
 import jakarta.transaction.Transactional;
 
@@ -24,13 +24,13 @@ public class PaisServiceTest extends BaseTest {
 	@Autowired
 	PaisService paisService;
 	@Test
-	@DisplayName("Teste inserir um pais")
+	@DisplayName("Teste inserir pais")
+
 	void insertTest() {
-		var pais = new Pais(null, "Brasil");
-		paisService.salvar(pais);
-		List<Pais> paises = paisService.listAll();
-		assertEquals(1, paises.size());
-		assertEquals("Brasil", paises.get(0).getName());
+        var pais = new Pais(null,"Itália");
+        paisService.salvar(pais);
+        assertEquals(1, paisService.listAll().size());
+        assertEquals("Itália", pais.getName());
 	}
 
 	@Test
@@ -85,6 +85,6 @@ public class PaisServiceTest extends BaseTest {
 	void listAllTest() {
 		List<Pais> lista = paisService.listAll();
 		assertEquals(2, lista.size());
-		assertEquals(1, lista.get(0).getId());
+		assertEquals(2, lista.get(0).getId());
 	}
 }

@@ -22,7 +22,7 @@ import br.com.trier.spring_matutino.services.impl.UserServiceImpl;
 
 @TestConfiguration
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("teste")
 
 public class BaseTest {
 
