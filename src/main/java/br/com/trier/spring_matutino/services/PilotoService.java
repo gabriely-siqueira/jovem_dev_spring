@@ -8,12 +8,11 @@ import br.com.trier.spring_matutino.domain.Piloto;
 import br.com.trier.spring_matutino.domain.Pista;
 
 
-
 public interface PilotoService {
 	Piloto salvar(Piloto piloto);
 	List<Piloto> listAll();
 	Piloto findById(Integer id);
-	Piloto update(Piloto pista);
+	Piloto update(Piloto piloto);
 	void delete(Integer id);
 	List<Piloto> findByPais(Pais pais);
 	List<Piloto> findByNameStartsWithIgnoreCase(String nome);
