@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,22 +37,22 @@ public class Corrida {
 
 	@ManyToOne
 	private Pista pista;
-
 	@ManyToOne
+	@NotNull
 	private Campeonato campeonato;
 
 	public Corrida(CorridaDTO dto) {
-
 		this(dto.getId(), DateUtils.strToZonedDateTime(dto.getData()), new Pista(dto.getIdPista(), null, null),
-				new Campeonato(dto.getIdCampeonato(), dto.getDescricaoCampeonato(), null));
+				new Campeonato(dto.getId(), dto.getDescricaoCampeonato(), null));
 	}
 
 	public Corrida(CorridaDTO dto, Campeonato campeonato, Pista pista) {
-
+		this(dto.getId(), DateUtils.strToZonedDateTime(dto.getData()), pista, campeonato);
 	}
 
 	public CorridaDTO toDto() {
 		return new CorridaDTO(id, DateUtils.zonedDateTimeToStr(data), pista.getId(), campeonato.getId(),
 				campeonato.getDescricao());
 	}
+
 }

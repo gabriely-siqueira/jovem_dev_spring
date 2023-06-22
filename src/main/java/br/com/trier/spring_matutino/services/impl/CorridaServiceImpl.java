@@ -27,20 +27,13 @@ public class CorridaServiceImpl implements CorridaService {
 			return repository.save(corrida);
 		}
 
-		private void validaCorrida(Corrida corrida) {
-			if(corrida == null) {
-				throw new ViolacaoIntegridade("A corrida está nula");
-			} else if(corrida.getData() == null) {
-				throw new ViolacaoIntegridade("A data está nula");
-			}else if(corrida.getData().getYear()!= corrida.getCampeonato().getYear()) {
-				throw new ViolacaoIntegridade("A data da corrida precisa ser no mesmo ano que campeonato");
-			}
-			validaData(corrida.getData());
-		}
 		
-		private void validaData(ZonedDateTime data) {
-			if(data.isBefore(ZonedDateTime.now())) {
-				
+		private void validaCorrida(Corrida corrida) {
+			if(corrida.getData() == null) {
+				throw new ViolacaoIntegridade("A data da corrida não pode ser nula");
+			}
+			if(corrida.getData().getYear() != corrida.getCampeonato().getYear()) {
+				throw new ViolacaoIntegridade("O ano da corrida não pode ser diferente do ano do campeonato!");
 			}
 		}
 		
