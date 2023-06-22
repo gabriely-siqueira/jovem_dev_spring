@@ -1,0 +1,2 @@
+insert into corrida(id_corrida, data, pista_id_pista, campeonato_id_campeonato) values(1, '2010-05-20T18:10:00Z', 1, 1);
+insert into corrida(id_corrida, data, pista_id_pista, campeonato_id_campeonato) values(2, '2015-10-14T19:20:00Z', 2, 2);

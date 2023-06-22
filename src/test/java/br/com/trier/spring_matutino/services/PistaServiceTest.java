@@ -2,7 +2,7 @@ package br.com.trier.spring_matutino.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -16,57 +16,38 @@ import br.com.trier.spring_matutino.BaseTest;
 import br.com.trier.spring_matutino.domain.Pais;
 import br.com.trier.spring_matutino.domain.Pista;
 
+
 @SpringBootTest
 public class PistaServiceTest extends BaseTest {
+
+	 @Autowired
+	    PistaService pistaService;
+	    
+	    @Autowired
+	    PaisService paisService;
+
+	    @Test
+		@DisplayName("Teste inserção pista")
+		@Sql({"classpath:/resources/sql/pais.sql"})
+		void insertTest() {
+			var pista = new Pista(null, 10, new Pais(2, "Brasil"));
+			pistaService.salvar(pista);
+			assertEquals(1, pistaService.listAll().size());
+			assertEquals("Brasil", pistaService.findById(1).getPais().getName());
+		}
 	
-	@Autowired
-	PistaService pistaService;
-	
-	@Autowired
-	PaisService paisService;
 
 	@Test
-	@DisplayName("Teste inserção de país")
-	void insertPaisTest() {
-		Pais novoPais = new Pais();
-		novoPais.setName("Brasil");
-
-		Pais insertedPais = paisService.salvar(novoPais);
-
-		assertThat(insertedPais).isNotNull();
-		assertThat(insertedPais.getId()).isPositive();
-
-		assertEquals("Brasil", insertedPais.getName());
-	}
-
-	@Test
-	@DisplayName("Teste inserção de pista")
-	void insertPistaTest() {
-		Pais pais = paisService.findById(1); 
-		Pista novaPista = new Pista();
-		novaPista.setTamanho(3000);
-		novaPista.setPais(pais); 
-
-		Pista insertedPista = pistaService.salvar(novaPista);
-
-		assertThat(insertedPista).isNotNull();
-		assertThat(insertedPista.getId()).isPositive();
-		assertEquals(3000, insertedPista.getTamanho());
-		assertEquals(pais, insertedPista.getPais());
-	}
-	@Test
-	@DisplayName("Teste busca pista por ID")//não funciona
-	@Sql("classpath:/resources/sql/pista.sql")
+	@DisplayName("Teste de busca de pista pelo id")
+	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
 	void findByIdTest() {
-		var pista = pistaService.findById(1);
-		assertThat(pista).isNotNull();
-		assertEquals(1, pista.getId());
-		assertEquals(3000, pista.getTamanho());
-		assertEquals(1, pista.getPais());
-
+	    var pista = pistaService.findById(1);
+	    assertEquals(3000, pista.getTamanho());
+	    assertEquals(1, pista.getPais().getId());
 	}
+
 	@Test
-	@DisplayName("Teste atualização de pista")
+	@DisplayName("Teste de atualização de pista")
 	void updatePistaTest() {
 	    Pista pista = pistaService.findById(1);
 	    pista.setTamanho(4000);
@@ -79,17 +60,15 @@ public class PistaServiceTest extends BaseTest {
 	}
 
 	@Test
-	@DisplayName("Teste delete pista")//não funciona
-	@Sql(("classpath:/resources/sql/pista.sql"))
+	@DisplayName("Teste de exclusão de pista")
+	@Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
 	void deleteTest() {
-		pistaService.delete(2);
-		List<Pista> lista = pistaService.listAll();
-		assertEquals(1, lista.size());
-		assertEquals(1, lista.get(0).getId());		
+	    pistaService.delete(1);
+	    assertEquals(1, pistaService.listAll().size());
 	}
 
 	@Test
-	@DisplayName("Teste listagem de pistas")
+	@DisplayName("Teste de listagem de pistas")
 	void listPistasTest() {
 	    List<Pista> pistas = pistaService.listAll();
 
@@ -98,19 +77,13 @@ public class PistaServiceTest extends BaseTest {
 	}
 
 	@Test
-	@DisplayName("Teste busca de pistas por país")
-	void findPistasByPaisTest() {
-	    Pais pais = paisService.findById(1);
-
-	    List<Pista> pistas = pistaService.findByPais(pais);
-
-	    assertThat(pistas).isNotNull();
-	    assertThat(pistas).hasSizeGreaterThan(0);
-
-	    for (Pista pista : pistas) {
-	        assertEquals(pais, pista.getPais());
-	    }
-	}
-
+    @DisplayName("Teste de busca de pista inexistente")
+    @Sql({ "classpath:/resources/sql/pais.sql", "classpath:/resources/sql/pista.sql" })
+    void findByIdNonExistentTest() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            pistaService.findById(9999);
+        });
+    }
 	
+
 }

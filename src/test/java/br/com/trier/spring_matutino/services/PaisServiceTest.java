@@ -23,18 +23,15 @@ public class PaisServiceTest extends BaseTest {
 
 	@Autowired
 	PaisService paisService;
-	 @Test
-	    @DisplayName("Teste inserção de país")
-	    void insertPaisTest() {
-	        Pais novoPais = new Pais();
-	        novoPais.setName("Novo País");
-
-	        Pais insertedPais = paisService.salvar(novoPais);
-
-	        assertThat(insertedPais).isNotNull();
-	        assertThat(insertedPais.getId()).isPositive();
-	        assertEquals("Novo País", insertedPais.getName());
-	    }
+	@Test
+	@DisplayName("Teste inserir um pais")
+	void insertTest() {
+		var pais = new Pais(null, "Brasil");
+		paisService.salvar(pais);
+		List<Pais> paises = paisService.listAll();
+		assertEquals(1, paises.size());
+		assertEquals("Brasil", paises.get(0).getName());
+	}
 
 	@Test
 	@DisplayName("Teste busca pais por ID")
