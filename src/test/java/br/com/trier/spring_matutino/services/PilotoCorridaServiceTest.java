@@ -88,7 +88,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
 	void listAllEmptyTest() {
 		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> service.listAll());
-		assertEquals("Não existe cadastros", exception.getMessage());
+		assertEquals("Não existem cadastros", exception.getMessage());
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	void findByCorridaNotFoundTest() {
 		var exception = assertThrows(ObjetoNaoEncontrado.class,
 				() -> service.findByCorrida(new Corrida(4, null, null, null)));
-		assertEquals("Não existe pilotos nessa corrida", exception.getMessage());
+		assertEquals("Não existem pilotos nessa corrida", exception.getMessage());
 	}
 
 	@Test
@@ -148,7 +148,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	void findByPilotoNotFoundTest() {
 		var exception = assertThrows(ObjetoNaoEncontrado.class,
 				() -> service.findByPiloto(new Piloto(4, null, null, null)));
-		assertEquals("Não existe corridas com esse piloto", exception.getMessage());
+		assertEquals("Não existem corridas com esse piloto", exception.getMessage());
 	}
 
 }
