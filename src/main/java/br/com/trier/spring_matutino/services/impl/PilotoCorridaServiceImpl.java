@@ -50,7 +50,7 @@ public class PilotoCorridaServiceImpl implements PilotoCorridaService {
 	@Override
 	public List<PilotoCorrida> listAll() {
 		if (repository.findAll().size() == 0) {
-			throw new ObjetoNaoEncontrado("Não existe cadastros");
+			throw new ObjetoNaoEncontrado("Não existem cadastros");
 		}
 		return repository.findAll();
 	}
@@ -63,7 +63,7 @@ public class PilotoCorridaServiceImpl implements PilotoCorridaService {
 	@Override
 	public List<PilotoCorrida> findByPiloto(Piloto piloto) {
 		if (repository.findByPiloto(piloto).size() == 0) {
-			throw new ObjetoNaoEncontrado("Não existe corridas com esse piloto");
+			throw new ObjetoNaoEncontrado("Não existem corridas com esse piloto");
 		}
 		return repository.findByPiloto(piloto);
 	}
@@ -71,7 +71,7 @@ public class PilotoCorridaServiceImpl implements PilotoCorridaService {
 	@Override
 	public List<PilotoCorrida> findByCorrida(Corrida corrida) {
 		if (repository.findByCorrida(corrida).size() == 0) {
-			throw new ObjetoNaoEncontrado("Não existe pilotos nessa corrida");
+			throw new ObjetoNaoEncontrado("Não existem pilotos nessa corrida");
 		}
 		return repository.findByCorrida(corrida);
 	}

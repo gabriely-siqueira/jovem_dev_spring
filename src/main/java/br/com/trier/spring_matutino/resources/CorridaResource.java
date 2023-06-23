@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.trier.spring_matutino.domain.Campeonato;
 import br.com.trier.spring_matutino.domain.Corrida;
+import br.com.trier.spring_matutino.domain.Pista;
 import br.com.trier.spring_matutino.domain.dto.CorridaDTO;
 import br.com.trier.spring_matutino.services.CampeonatoService;
 import br.com.trier.spring_matutino.services.CorridaService;
@@ -32,17 +34,22 @@ public class CorridaResource {
 	CampeonatoService campeonatoService;
 	
 	@PostMapping
-	public ResponseEntity<CorridaDTO> insert (@RequestBody CorridaDTO corrida) {
-		return ResponseEntity.ok(service.salvar(new Corrida(corrida,
-				campeonatoService.findById(corrida.getIdCampeonato()),
-				pistaService.findById(corrida.getIdPista())))
-				.toDto());
+	public ResponseEntity<CorridaDTO> insert(@RequestBody CorridaDTO corrida) {
+	    Campeonato campeonato = campeonatoService.findById(corrida.getIdCampeonato());
+	    Pista pista = pistaService.findById(corrida.getIdPista());
+
+	    Corrida newCorrida = new Corrida(corrida, campeonato, pista);
+	    Corrida savedCorrida = service.salvar(newCorrida);
+	    
+	    return ResponseEntity.ok(savedCorrida.toDto());
 	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<CorridaDTO> findById(@RequestBody Integer id){
-		return ResponseEntity.ok(service.findById(id).toDto());
-	}
+
+	 @GetMapping("/{id}")
+	    public ResponseEntity<CorridaDTO> findById(@PathVariable Integer id) {
+	        Corrida corrida = service.findById(id);
+	        return ResponseEntity.ok(corrida.toDto());
+	    }
+
 	
 	@GetMapping
 	public ResponseEntity<List<CorridaDTO>> listAll(){

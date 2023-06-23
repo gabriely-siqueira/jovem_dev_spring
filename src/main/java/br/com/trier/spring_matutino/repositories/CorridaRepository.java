@@ -16,6 +16,6 @@ public interface CorridaRepository extends JpaRepository<Corrida, Integer> {
 	List<Corrida> findByData(ZonedDateTime data);
 	List<Corrida> findByPista(Pista pista);
 	List<Corrida> findByCampeonato(Campeonato campeonato);
-;
+
 
 }

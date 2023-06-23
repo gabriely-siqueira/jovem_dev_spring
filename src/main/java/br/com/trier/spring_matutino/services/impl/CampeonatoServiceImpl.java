@@ -1,8 +1,6 @@
 package br.com.trier.spring_matutino.services.impl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,31 +18,31 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
 	@Autowired
 	private CampeonatoRepository repository;
-	
-	public void vericaCampeonato(Campeonato obj) {
-		if(obj == null) {
-			throw new ViolacaoIntegridade("campeonato nulo".formatted(obj.getYear()));
-		}if(obj.getDescricao() == null ||obj.getDescricao().equals("")) {
-			
-		}
-	}
-
-	public void vericaAno(Campeonato campeonato) {
-		int anoAtual = LocalDate.now().getYear();
-		int anoMaximo = anoAtual + 1;
-		if (campeonato.getYear() <= 1990 || campeonato.getYear() >= anoMaximo)
-			throw new ViolacaoIntegridade("Ano %s inválido".formatted(campeonato.getYear()));
-	}
 
 	@Override
-	public Campeonato salvar(Campeonato obj) {
-		vericaCampeonato(obj);
-		if (obj.getYear() <= 1990 && obj.getYear() >= LocalDateTime.now().getYear() + 1) {
-			throw new ViolacaoIntegridade("O ano está fora do intervalo permitido: %s".formatted(obj.getYear()));
+	 public Campeonato salvar(Campeonato campeonato) {
+	verificaCampeonato(campeonato);
+	  return repository.save(campeonato);
+	 }
 
-		}
-		return repository.save(obj);
+	private void verificaCampeonato(Campeonato campeonato) {
+	    if (campeonato == null) {
+	        throw new ViolacaoIntegridade("O campeonato está nulo");
+	    } else if (campeonato.getDescricao() == null || campeonato.getDescricao().isBlank()) {
+	        throw new ViolacaoIntegridade("A descrição está vazia");
+	    } else if (campeonato.getYear() == null || campeonato.getYear() == 0) {
+	        throw new ViolacaoIntegridade("O ano está vazio");
+	    }
+	    verificaAno(campeonato.getYear());
 	}
+
+		
+	 private void verificaAno(Integer ano) {
+	  int anoAtual = LocalDate.now().getYear();
+	  if (anoAtual < 1990 || anoAtual > anoAtual) {
+	   throw new ViolacaoIntegridade("O ano precisa ser maior que 1990 e menor que 2023");
+	  }
+	 }
 
 	@Override
 	public List<Campeonato> listAll() {
@@ -53,15 +51,22 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 
 	@Override
 	public Campeonato findById(Integer id) {
-		Optional<Campeonato> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjetoNaoEncontrado("Campeonato %s não encontrado!".formatted(id)));
+	    if (id == null) {
+	        throw new IllegalArgumentException("O ID não pode ser nulo.");
+	    }
+
+	    Optional<Campeonato> obj = repository.findById(id);
+	    if (obj.isEmpty()) {
+	        throw new ObjetoNaoEncontrado("Campeonato %s não encontrado!".formatted(id));
+	    }
+	    return obj.get();
 	}
 
 	@Override
 	public Campeonato update(Campeonato obj) {
-		vericaCampeonato(obj);
-		Campeonato campeonato = findById(obj.getId());
-		return repository.save(campeonato);
+	    verificaCampeonato(obj);
+	    Campeonato campeonato = findById(obj.getId());
+	    return repository.save(campeonato);
 	}
 
 	@Override
@@ -73,27 +78,24 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 	@Override
 	public List<Campeonato> findByYearBetween(Integer start, Integer end) {
 		List<Campeonato> campeonatos = repository.findByYearBetween(start, end);
-		if(campeonatos.size()==0) {
+		if (campeonatos.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Não há campeonatos entre %s e %s".formatted(start, end));
 		}
 		return campeonatos;
 	}
 
-	
-
 	public List<Campeonato> findByYear(Integer year) {
 		List<Campeonato> campeonatos = repository.findByYear(year);
-		if (campeonatos.size() == 0) {
+		if (campeonatos.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Campeonato de %s não encontrado".formatted(year));
 		}
 		return campeonatos;
-
 	}
 
 	@Override
 	public List<Campeonato> findByDescricaoContainsIgnoreCase(String descricao) {
 		List<Campeonato> campeonatos = repository.findByDescricaoContainsIgnoreCase(descricao);
-		if(campeonatos.size()==0) {
+		if (campeonatos.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Campeonato %s não encontrado".formatted(descricao));
 		}
 		return campeonatos;
@@ -102,10 +104,9 @@ public class CampeonatoServiceImpl implements CampeonatoService {
 	@Override
 	public List<Campeonato> findByDescricaoContainsIgnoreCaseAndYearEquals(String descricao, Integer year) {
 		List<Campeonato> campeonatos = repository.findByDescricaoContainsIgnoreCaseAndYearEquals(descricao, year);
-		if(campeonatos.size()==0) {
+		if (campeonatos.isEmpty()) {
 			throw new ObjetoNaoEncontrado("Campeonato %s de %s não encontrado".formatted(descricao, year));
 		}
 		return campeonatos;
 	}
-
 }

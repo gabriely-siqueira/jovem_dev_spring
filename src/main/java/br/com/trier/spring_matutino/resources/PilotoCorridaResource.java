@@ -31,11 +31,9 @@ public class PilotoCorridaResource {
 	private PilotoService pilotoService;
 
 	@PostMapping
-	public ResponseEntity<PilotoCorridaDTO> insert(@RequestBody PilotoCorridaDTO pilotoCorridaDTO) {
-		return ResponseEntity.ok(service
-				.salvar(new PilotoCorrida(pilotoCorridaDTO, pilotoService.findById(pilotoCorridaDTO.getIdPiloto()),
-						corridaService.findById(pilotoCorridaDTO.getIdCorrida())))
-				.toDTO());
+	public ResponseEntity<PilotoCorridaDTO> insert(@RequestBody PilotoCorridaDTO dto) {
+		return ResponseEntity.ok(service.salvar(new PilotoCorrida(dto, pilotoService.findById(dto.getIdPiloto()),
+				corridaService.findById(dto.getIdCorrida()))).toDTO());
 	}
 
 	@GetMapping("/{id}")
@@ -49,11 +47,9 @@ public class PilotoCorridaResource {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<PilotoCorridaDTO> update(@RequestBody PilotoCorridaDTO pilotoCorridaDTO,
-			@PathVariable Integer id) {
-		PilotoCorrida piloto = new PilotoCorrida(pilotoCorridaDTO,
-				pilotoService.findById(pilotoCorridaDTO.getIdPiloto()),
-				corridaService.findById(pilotoCorridaDTO.getIdCorrida()));
+	public ResponseEntity<PilotoCorridaDTO> update(@RequestBody PilotoCorridaDTO dto, @PathVariable Integer id) {
+		PilotoCorrida piloto = new PilotoCorrida(dto, pilotoService.findById(dto.getIdPiloto()),
+				corridaService.findById(dto.getIdCorrida()));
 		piloto.setId(id);
 		return ResponseEntity.ok(service.update(piloto).toDTO());
 	}
