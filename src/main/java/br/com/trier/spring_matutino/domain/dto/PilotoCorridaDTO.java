@@ -13,4 +13,5 @@ public class PilotoCorridaDTO {
 	private Integer idCorrida;
 	private String dataCorrida;
 	private Integer colocacao;
-}
+	
+}    
