@@ -31,8 +31,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
 
 	void insertTest() {
-		var pilotoCorrida = new PilotoCorrida(null, pilotoService.findById(1), corridaService.findById(1),
-				"Primeiro Lugar");
+		var pilotoCorrida = new PilotoCorrida(null, pilotoService.findById(1), corridaService.findById(1), 1);
 		service.salvar(pilotoCorrida);
 		assertEquals(1, service.listAll().size());
 	}
@@ -61,10 +60,9 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
 	@Sql({ "classpath:/resources/sql/piloto_corrida.sql" })
 	void updateTest() {
-		var pilotoCorrida = new PilotoCorrida(1, pilotoService.findById(1), corridaService.findById(1),
-				"Novo piloto corrida");
+		var pilotoCorrida = new PilotoCorrida(1, pilotoService.findById(1), corridaService.findById(1), 1);
 		service.update(pilotoCorrida);
-		assertEquals("Novo piloto corrida", service.listAll().get(0).getColocacao());
+		assertEquals(1, service.listAll().get(0).getColocacao());
 	}
 
 	@Test
@@ -72,7 +70,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
 	@Sql({ "classpath:/resources/sql/piloto_corrida.sql" })
 	void updateInvalidTest() {
-		var pilotoCorrida = new PilotoCorrida(10, pilotoService.findById(1), corridaService.findById(1), "Teste");
+		var pilotoCorrida = new PilotoCorrida(10, pilotoService.findById(1), corridaService.findById(1), 1);
 		var exception = assertThrows(ObjetoNaoEncontrado.class, () -> service.update(pilotoCorrida));
 		assertEquals("Esse cadastro não existe", exception.getMessage());
 	}
@@ -99,7 +97,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 	@Sql({ "classpath:/resources/sql/piloto_corrida.sql" })
 	void findByIdTest() {
 		var pilotoCorrida = service.findById(1);
-		assertEquals("Primeiro Lugar", pilotoCorrida.getColocacao());
+		assertEquals(1, pilotoCorrida.getColocacao());
 		assertEquals(1, pilotoCorrida.getPiloto().getId());
 	}
 
@@ -112,7 +110,6 @@ public class PilotoCorridaServiceTest extends BaseTest {
 		assertEquals("Piloto-Corrida 10 não existe", exception.getMessage());
 	}
 
-	
 	@Test
 	@DisplayName("Teste buscar os pilotos de uma corrida")
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
@@ -133,6 +130,7 @@ public class PilotoCorridaServiceTest extends BaseTest {
 				() -> service.findByCorrida(new Corrida(4, null, null, null)));
 		assertEquals("Não existe pilotos nessa corrida", exception.getMessage());
 	}
+
 	@Test
 	@DisplayName("Teste buscar corridas de um piloto")
 	@Sql({ "classpath:/resources/sql/bd_piloto_corrida.sql" })
