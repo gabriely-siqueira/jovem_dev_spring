@@ -64,6 +64,14 @@ public class UserServiceImpl implements UserService {
 		}
 		return lista;
 	}
+	@Override
+	public List<User> findByEmail(String email) {
+		List<User> lista = repository.findByEmail(email);
+		if (lista.size() == 0) {
+			throw new ObjetoNaoEncontrado("Nenhum nome de usuário inicia com %s".formatted(name));
+		}
+		return lista;
+	}
 
 	
 }

@@ -20,7 +20,7 @@ import br.com.trier.spring_matutino.services.PaisService;
 import br.com.trier.spring_matutino.services.PilotoService;
 
 @RestController
-@RequestMapping(value = "/piloto")
+@RequestMapping(value = "/pilotos")
 public class PilotoResource {
 	@Autowired
 	private PilotoService pilotoService;

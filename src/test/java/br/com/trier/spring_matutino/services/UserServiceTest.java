@@ -67,7 +67,7 @@ public class UserServiceTest extends BaseTest {
 	@DisplayName("Teste atualização de usuário")
 	@Sql(("classpath:/resources/sql/usuario.sql"))
 	void updateUserTest() {
-		User user = new User(1, "Novo Usuario", "test@gmail.com.br", "123");
+		User user = new User(1, "Novo Usuario", "test@gmail.com.br", "123","ADMIN");
 		userService.update(user);
 		List<User> usuarios = userService.listAll();
 		assertEquals("Novo Usuario", usuarios.get(0).getName());
@@ -119,7 +119,7 @@ public class UserServiceTest extends BaseTest {
 	@DisplayName("Teste cadastra email duplicado")
 	@Sql(("classpath:/resources/sql/usuario.sql"))
 	void insereExisteEmail() {
-		var user = new User(null, "Usuário", "usuario2@gmail.com", "123");
+		var user = new User(null, "Usuário", "usuario2@gmail.com", "123", "ADMIN");
 		var exception = assertThrows(ViolacaoIntegridade.class, () -> userService.salvar(user));
 		assertEquals("E-mail já cadastrado: " + user.getEmail(), exception.getMessage());
 		List<User> lista = userService.listAll();
@@ -130,7 +130,7 @@ public class UserServiceTest extends BaseTest {
 	@DisplayName("Teste de alteração de usuário com e-mail duplicado")
 	@Sql(("classpath:/resources/sql/usuario.sql"))
 	void updateDuplicatedEmailTest() {
-		User user = new User(2,"usuario2@gmail.com","Usuario2","123");
+		User user = new User(2,"usuario2@gmail.com","Usuario2","123","ADMIN");
 		ViolacaoIntegridade exception = assertThrows(ViolacaoIntegridade.class, () -> userService.update(user));
 		assertEquals("Esse email já existe", exception.getMessage());
 	}
