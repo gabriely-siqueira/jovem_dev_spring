@@ -58,7 +58,7 @@ public class UserResourceTest {
 	    return rest.exchange(
 	            url,
 	            HttpMethod.GET,
-	            new HttpEntity<>(getHeaders("Usuário teste", "123")),
+	            new HttpEntity<>(getHeaders("Usuario1", "321")),
 	            UserDTO.class
 	    );
 	}
@@ -67,7 +67,7 @@ public class UserResourceTest {
 	    return rest.exchange(
 	            url,
 	            HttpMethod.GET,
-	            new HttpEntity<>(getHeaders("Usuário teste", "123")),
+	            new HttpEntity<>(getHeaders("Usuario1", "321")),
 	            new ParameterizedTypeReference<List<UserDTO>>() {
 	            }
 	    );
@@ -80,7 +80,7 @@ public class UserResourceTest {
 	public void findByNameTest() {
 	    ResponseEntity<List<UserDTO>> response = getUsers("/usuarios/name/u");
 	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertEquals(2, response.getBody().size());
+	    assertEquals(3, response.getBody().size());
 	}
 
 	@Test
@@ -108,8 +108,8 @@ public class UserResourceTest {
 	@Sql({ "classpath:/resources/sql/limpa_tabelas.sql" })
 	@Sql({ "classpath:/resources/sql/usuario.sql" })
 	public void testCreateUser() {
-	    UserDTO dto = new UserDTO(null, "nome", "email", "senha", "ADMIN");
-	    HttpHeaders headers = getHeaders("Usuário teste", "123");
+	    UserDTO dto = new UserDTO(null, "nome", "email", "senha", "USER");
+	    HttpHeaders headers = getHeaders("Usuario1", "321");
 	    HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
 	    ResponseEntity<UserDTO> responseEntity = rest.exchange(
 	            "/usuarios",
@@ -130,12 +130,12 @@ public class UserResourceTest {
 	    ResponseEntity<List<UserDTO>> response = rest.exchange(
 	            "/usuarios",
 	            HttpMethod.GET,
-	            new HttpEntity<>(getHeaders("Usuário teste", "123")),
+	            new HttpEntity<>(getHeaders("Usuario1", "321")),
 	            new ParameterizedTypeReference<List<UserDTO>>() {
 	            }
 	    );
 	    assertEquals(HttpStatus.OK, response.getStatusCode());
-	    assertEquals(2, response.getBody().size());
+	    assertEquals(3, response.getBody().size());
 	}
 
 	@Test
@@ -143,8 +143,8 @@ public class UserResourceTest {
 	@Sql({ "classpath:/resources/sql/limpa_tabelas.sql" })
 	@Sql({ "classpath:/resources/sql/usuario.sql" })
 	public void testUpdateUser() {
-	    UserDTO dto = new UserDTO(3, "nome", "email", "senha", "ADMIN");
-	    HttpHeaders headers = getHeaders("Usuário teste", "123");
+	    UserDTO dto = new UserDTO(3, "Usuario3", "email", "senha", "ADMIN");
+	    HttpHeaders headers = getHeaders("Usuario1", "321");
 	    HttpEntity<UserDTO> requestEntity = new HttpEntity<>(dto, headers);
 	    ResponseEntity<UserDTO> responseEntity = rest.exchange(
 	            "/usuarios/3",
@@ -154,7 +154,7 @@ public class UserResourceTest {
 	    );
 	    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 	    UserDTO user = responseEntity.getBody();
-	    assertEquals("nome", user.getName());
+	    assertEquals("Usuario3", user.getName());
 	}
 
 	@Test
@@ -162,7 +162,7 @@ public class UserResourceTest {
 	@Sql({ "classpath:/resources/sql/limpa_tabelas.sql" })
 	@Sql({ "classpath:/resources/sql/usuario.sql" })
 	public void testDeleteUser() {
-	    HttpHeaders headers = getHeaders("Usuário teste", "123");
+	    HttpHeaders headers = getHeaders("Usuario1", "321");
 	    HttpEntity<Void> requestEntity = new HttpEntity<>(null, headers);
 	    ResponseEntity<Void> responseEntity = rest.exchange(
 	            "/usuarios/3",
@@ -178,7 +178,7 @@ public class UserResourceTest {
 	@Sql({ "classpath:/resources/sql/limpa_tabelas.sql" })
 	@Sql({ "classpath:/resources/sql/usuario.sql" })
 	public void testDeleteNonExistUser() {
-	    HttpHeaders headers = getHeaders("Usuário teste", "123");
+	    HttpHeaders headers = getHeaders("Usuario1", "321");
 	    HttpEntity<Void> requestEntity = new HttpEntity<>(null, headers);
 	    ResponseEntity<Void> responseEntity = rest.exchange(
 	            "/usuarios/100",

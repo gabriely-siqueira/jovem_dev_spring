@@ -25,10 +25,10 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 
-	@Secured({ "ROLE_ADMIN" })
+	@Secured({"ROLE_ADMIN"})
 	@PostMapping
-	public ResponseEntity<UserDTO> insert(@RequestBody User user) {
-		User newUser = service.salvar(user);
+	public ResponseEntity<UserDTO> insert(@RequestBody UserDTO user) {
+		User newUser = service.salvar(new User(user));
 		return newUser != null ? ResponseEntity.ok(newUser.toDto()) : ResponseEntity.badRequest().build();
 	}
 
