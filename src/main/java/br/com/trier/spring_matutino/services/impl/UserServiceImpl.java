@@ -45,14 +45,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         User existingUser = findById(user.getId());
-        validateEmail(user, existingUser); // Validate the email before performing the update
-
-        // Update the existing user with the new values
-        existingUser.setEmail(user.getEmail());
-        existingUser.setName(user.getName());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setRole(user.getRole());
-
         return repository.save(existingUser);
     }
 
