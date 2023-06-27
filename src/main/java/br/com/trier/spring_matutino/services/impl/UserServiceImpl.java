@@ -15,63 +15,75 @@ import br.com.trier.spring_matutino.services.exceptions.ViolacaoIntegridade;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	UserRepository repository;
+    @Autowired
+    UserRepository repository;
+
+    private void validateEmail(User user) {
+        User existingUser = repository.findByEmail(user.getEmail());
+        if (existingUser != null && !existingUser.getId().equals(user.getId())) {
+            throw new ViolacaoIntegridade("E-mail já cadastrado: %s".formatted(user.getEmail()));
+        }
+    }
+
+    @Override
+    public User salvar(User user) {
+        validateEmail(user);
+        return repository.save(user);
+    }
+
+    @Override
+    public List<User> listAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public User findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ObjetoNaoEncontrado("Usuário %s não encontrado!".formatted(id)));
+    }
+
+    @Override
+    public User update(User user) {
+        User existingUser = findById(user.getId());
+        validateEmail(user, existingUser); // Validate the email before performing the update
+
+        // Update the existing user with the new values
+        existingUser.setEmail(user.getEmail());
+        existingUser.setName(user.getName());
+        existingUser.setPassword(user.getPassword());
+        existingUser.setRole(user.getRole());
+
+        return repository.save(existingUser);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        User user = findById(id);
+        repository.delete(user);
+    }
+
+    @Override
+    public List<User> findByNameStartsWithIgnoreCase(String name) {
+        List<User> lista = repository.findByNameStartsWithIgnoreCase(name);
+        if (lista.isEmpty()) {
+            throw new ObjetoNaoEncontrado("Nenhum nome de usuário inicia com %s".formatted(name));
+        }
+        return lista;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findByEmailAndPassword(String email, String password) {
+        return repository.findByEmailAndPassword(email, password);
+    }
+
+	@Override
+	public Optional<User> findByName(String name) {
 	
-	
-	private void findByEmail(User obj) {
-		User user = repository.findByEmail(obj.getEmail());
-		if(user != null && user.getId()!= obj.getId()) {
-			throw new ViolacaoIntegridade("E-mail já cadastrado: %s".formatted(obj.getEmail()));
-		}
+		return repository.findByName(name);
 	}
-
-	@Override
-	public User salvar(User user) {
-		findByEmail(user);
-		return repository.save(user);
-	}
-
-	@Override
-	public List<User> listAll() {
-		return repository.findAll();
-	}
-
-	@Override
-	public User findById(Integer id) {
-		Optional<User> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjetoNaoEncontrado("Usuário %s não encontrado!".formatted(id)));
-	}
-
-	@Override
-	public User update(User user) {
-		User usuario = findById(user.getId());
-		findByEmail(usuario);
-		return repository.save(user);
-	}
-
-	@Override
-	public void delete(Integer id) {
-		User user = findById(id);
-		repository.delete(user);
-	}
-
-	@Override
-	public List<User> findByNameStartsWithIgnoreCase(String name) {
-		List<User> lista = repository.findByNameStartsWithIgnoreCase(name);
-		if (lista.size() == 0) {
-			throw new ObjetoNaoEncontrado("Nenhum nome de usuário inicia com %s".formatted(name));
-		}
-		return lista;
-	}
-	@Override
-	public List<User> findByEmail(String email) {
-		List<User> lista = repository.findByEmail(email);
-		if (lista.size() == 0) {
-			throw new ObjetoNaoEncontrado("Nenhum nome de usuário inicia com %s".formatted(name));
-		}
-		return lista;
-	}
-
-	
 }

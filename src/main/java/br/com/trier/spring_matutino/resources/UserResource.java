@@ -33,12 +33,13 @@ public class UserResource {
 	}
 
 	@Secured({ "ROLE_USER" })
-	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> buscaPorCodigo(@PathVariable Integer id) {
-		User user = service.findById(id);
-		return ResponseEntity.ok(user.toDto());
-	}
-	@Secured({"ROLE_USER"})
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> buscaPorCodigo(@PathVariable Integer id) {
+        User user = service.findById(id);
+        return ResponseEntity.ok(user.toDto());
+    }   
+
+	@Secured({ "ROLE_USER" })
 	@GetMapping
 	public ResponseEntity<List<UserDTO>> listaTudo() {
 		List<User> lista = service.listAll();
@@ -60,10 +61,10 @@ public class UserResource {
 		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
-	@Secured({"ROLE_USER"})
-	@GetMapping("/name/{name}")
-	public ResponseEntity<List<User>> buscaPorNome(@PathVariable String name) {
-		return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name));
-	}
 
+	 @Secured({ "ROLE_USER" })
+	    @GetMapping("/name/{name}")
+	    public ResponseEntity<List<User>> buscaPorNome(@PathVariable String name) {
+	        return ResponseEntity.ok(service.findByNameStartsWithIgnoreCase(name));
+	    }
 }
